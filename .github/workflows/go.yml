@@ -20,7 +20,9 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.25.0'
-        cache: false
 
     - name: Test
       run: go test -v ./...
+
+    - name: GoLang Test
+      uses: n8mgr/action-golang-test@v2.1.1
