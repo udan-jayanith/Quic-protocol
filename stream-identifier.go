@@ -1,7 +1,6 @@
 package Quick
 
 import (
-	"encoding/binary"
 	"errors"
 )
 
@@ -49,47 +48,4 @@ func (si *StreamID) StreamType() StreamType {
 
 func (si *StreamID) ToVariableLengthInt() ([]byte, error) {
 	return ToVarint(si.streamID)
-}
-
-func ToVarint(v int64) ([]byte, error) {
-	/*
-		2MSB	Length	Usable Bits	 Range
-		00		1		6			 0-63
-		01		2		14			 0-16383
-		10		4		30			 0-1073741823
-		11		8		62			 0-4611686018427387903
-	*/
-	var bytes int
-	if v <= 63 {
-		bytes = 1
-	} else if v <= 16383 {
-		bytes = 2
-	} else if v <= 1073741823 {
-		bytes = 4
-	} else if v <= 4611686018427387903 {
-		bytes = 8
-	} else {
-		return []byte{}, IntegerOverflow
-	}
-	buf := make([]byte, bytes)
-
-	_, err := binary.Encode(buf, binary.BigEndian, v)
-	if err != nil {
-		return buf, err
-	}
-
-	switch bytes {
-	case 2:
-		buf[0] = buf[0] | 0b_01_00_00_00
-	case 4:
-		buf[0] = buf[0] | 0b_10_00_00_00
-	case 8:
-		buf[0] = buf[0] | 0b_11_00_00_00
-	}
-
-	return buf, nil
-}
-
-func VarintToInt64(b []byte) int64 {
-	panic("Unimplemented")
 }
