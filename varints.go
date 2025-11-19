@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 )
 
-func ToVarint(v int64) ([]byte, error) {
+func Int62ToVarint(v int64) ([]byte, error) {
 	/*
 		2MSB	Length	Usable Bits	 Range
 		00		1		6			 0-63
@@ -44,7 +44,8 @@ func ToVarint(v int64) ([]byte, error) {
 	return buf, nil
 }
 
-func VarintToInt64(b []byte) (int64, error) {
+// This is actually int62
+func VarintToInt62(b []byte) (int64, error) {
 	if len(b) == 0 || len(b) > 8 {
 		return 0, IntegerOverflow
 	}
