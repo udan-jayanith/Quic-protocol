@@ -46,6 +46,6 @@ func (si *StreamID) StreamType() StreamType {
 	return si.streamID & 0b_11
 }
 
-func (si *StreamID) ToVariableLengthInt() ([]byte, error) {
+func (si *StreamID) ToVariableLength() ([]byte, error) {
 	return Int62ToVarint(si.streamID)
 }
