@@ -1,7 +1,9 @@
 package Quick
 
 import (
+	"bufio"
 	"encoding/binary"
+	"io"
 )
 
 func Int62ToVarint(v int64) ([]byte, error) {
@@ -50,6 +52,17 @@ func VarintToInt62(b []byte) (int64, error) {
 		return 0, IntegerOverflow
 	}
 
+	b[0] = b[0] & 0b_00_11_11_11
+
+	buf := make([]byte, 8-len(b))
+	buf = append(buf, b...)
+
+	var v int64
+	_, err := binary.Decode(buf, binary.BigEndian, &v)
+	return v, err
+}
+
+func ReadVarint62(rd *bufio.Reader) (int64, error) {
 	/*
 		2MSB	Length	Usable Bits	 Range
 		00		1		6			 0-63
@@ -57,6 +70,12 @@ func VarintToInt62(b []byte) (int64, error) {
 		10		4		30			 0-1073741823
 		11		8		62			 0-4611686018427387903
 	*/
+
+	b, err := rd.Peek(1)
+	if err != nil {
+		rd.ReadByte()
+		return 0, err
+	}
 
 	var length int
 	switch b[0] & 0b_11_00_00_00 {
@@ -69,16 +88,14 @@ func VarintToInt62(b []byte) (int64, error) {
 	case 0b_11_00_00_00:
 		length = 8
 	}
-	b[0] = b[0] & 0b_00_11_11_11
 
 	if length == 0 {
 		return 0, IntegerOverflow
 	}
 
-	buf := make([]byte, 8-len(b))
-	buf = append(buf, b...)
-
-	var v int64
-	_, err := binary.Decode(buf, binary.BigEndian, &v)
-	return v, err
+	p := make([]byte, length)
+	if _, err := io.ReadFull(rd, p); err != nil {
+		return 0, err
+	}
+	return VarintToInt62(p)
 }

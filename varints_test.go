@@ -25,3 +25,7 @@ func TestVarInt(t *testing.T) {
 		t.Fatal("Expected a error but got nil")
 	}
 }
+
+func TestReadVarint62(t *testing.T){
+	
+}
