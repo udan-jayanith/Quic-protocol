@@ -2,6 +2,7 @@ package Quick
 
 import (
 	"bufio"
+	"bytes"
 	"io"
 )
 
@@ -84,10 +85,62 @@ type StreamFrame struct {
 	Length Int62 // Length is optional and uses variable length encoding.
 	// Offset of the the stream and the Length of the frame cannot overflow int62.
 
-	StreamData io.Reader
+	StreamData *bytes.Reader
 }
 
-func ReadStreamFrame(rd *bufio.Reader) (StreamFrame, error) {
+func ReadStreamFrame(rd *bufio.Reader) (StreamFrame, QuickTransportError) {
 	sf := StreamFrame{}
-	return sf, nil
+
+	//Decode the frame type.
+	if v, err := ReadVarint62(rd); err != nil {
+		return sf, FLOW_CONTROL_ERROR
+	} else {
+		sf.Type = StreamFrameType(v)
+	}
+
+	//Decode stream id
+	if v, err := ReadVarint62(rd); err != nil {
+		return sf, FLOW_CONTROL_ERROR
+	} else {
+		sf.StreamID = NewStreamID(v)
+	}
+
+	//Decode offset if it's in the frame.
+	if sf.Type.GetOffset() {
+		if v, err := ReadVarint62(rd); err != nil {
+			return sf, FLOW_CONTROL_ERROR
+		} else {
+			sf.Offset = v
+		}
+	}
+
+	//Decode length if it's in the frame.
+	if sf.Type.GetLength() {
+		if v, err := ReadVarint62(rd); err != nil {
+			return sf, FLOW_CONTROL_ERROR
+		} else {
+			sf.Length = v
+		}
+	}
+
+	/*
+		-- the sum of the offset and data length -- cannot exceed 262-1, as it is not possible to provide flow control credit for that data.
+		Receipt of a frame that exceeds this limit MUST be treated as a connection error of type FRAME_ENCODING_ERROR or FLOW_CONTROL_ERROR.
+	*/
+	if (sf.Offset + sf.Length).IsOverflowing() {
+		return sf, FLOW_CONTROL_ERROR
+	}
+
+	if sf.Length == 0 {
+		return sf, NO_ERROR
+	}
+
+	// Read the stream data
+	buf := make([]byte, sf.Length)
+	if _, err := io.ReadFull(rd, buf); err != nil {
+		return sf, FLOW_CONTROL_ERROR
+	}
+
+	sf.StreamData = bytes.NewReader(buf)
+	return sf, NO_ERROR
 }
