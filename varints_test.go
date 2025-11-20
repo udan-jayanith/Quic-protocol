@@ -45,6 +45,7 @@ func TestReadVarint62(t *testing.T) {
 			t.Fatal("Expected 73 but got", v)
 		}
 
+		//Test wether more bytes were read then needed.
 		buf := make([]byte, 11)
 		n, err := io.ReadFull(rd, buf)
 		if n != 10 {

@@ -4,11 +4,13 @@ import (
 	"errors"
 )
 
+type int62 = int64
+
 const (
 	MaxStreamID int64 = (int64(1) << 62) - 1 // 2^62-1
 )
 
-type StreamType = int64
+type StreamType = int62
 
 const (
 	ClientInitiatedBidi StreamType = iota + 0b_00 // 0b_00
