@@ -1,6 +1,9 @@
 package Quick_test
 
 import (
+	"bufio"
+	"bytes"
+	"io"
 	"testing"
 
 	quick "github.com/udan-jayanith/Quick"
@@ -26,5 +29,42 @@ func TestVarInt(t *testing.T) {
 	}
 }
 
-func TestReadVarint62(t *testing.T){
+func TestReadVarint62(t *testing.T) {
+	{
+		b, err := quick.Int62ToVarint(73)
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+
+		b = append(b, make([]byte, 10)...)
+		rd := bufio.NewReader(bytes.NewReader(b))
+		v, err := quick.ReadVarint62(rd)
+		if err != nil {
+			t.Fatal(err.Error())
+		} else if v != 73 {
+			t.Fatal("Expected 73 but got", v)
+		}
+
+		buf := make([]byte, 11)
+		n, err := io.ReadFull(rd, buf)
+		if n != 10 {
+			t.Fatal(err.Error())
+		}
+	}
+
+	{
+		var input int64 = 1073741823
+		b, err := quick.Int62ToVarint(input)
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+
+		//Input is a minimum of 4 bytes
+		//Take first two bytes from it.
+		b = b[:3]
+		rd := bufio.NewReader(bytes.NewReader(b))
+		if _, err := quick.ReadVarint62(rd); err == nil {
+			t.Fatal("Expected a error but got no error")
+		}
+	}
 }
