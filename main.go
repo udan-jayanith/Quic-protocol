@@ -24,3 +24,9 @@ Indicates that x is repeated zero or more times and that each instance has a len
 */
 
 //This document uses network byte order (that is, big endian) values.
+
+var (
+	notImplemented = func() {
+		panic("Not implemented")
+	}
+)
