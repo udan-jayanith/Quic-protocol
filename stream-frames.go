@@ -7,6 +7,7 @@ import (
 )
 
 // 8 bits long, StreamFrameType can convert to Int62 by doing
+//
 //	Int62(StreamFrameType)
 //	---
 type StreamFrameType uint8
@@ -88,6 +89,11 @@ type StreamFrame struct {
 	// Offset of the the stream and the Length of the frame cannot overflow int62.
 
 	StreamData *bytes.Reader
+}
+
+func (sf *StreamFrame) Encode() []byte {
+	notImplemented()
+	return []byte{}
 }
 
 func ReadStreamFrame(rd *bufio.Reader) (StreamFrame, QuickTransportError) {
