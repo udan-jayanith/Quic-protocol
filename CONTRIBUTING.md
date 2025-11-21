@@ -1,6 +1,6 @@
-# Contributing to Go
+# Contributing to Quick
 
-GoHTML is an open source project.
+Quick is an open source project.
 
 It might be the work of hundreds of contributors. We appreciate your help!
 
@@ -12,7 +12,7 @@ If you are sure you have found a bug and the behavior you are seeing is confirme
 
 The recommended way to file an issue is by filing an issue, make sure to answer these five questions:
 
-1. What version of GoHTML are you using ?
+1. What version of Quick are you using ?
 3. What did you do?
 4. What did you expect to see?
 5. What did you see instead?

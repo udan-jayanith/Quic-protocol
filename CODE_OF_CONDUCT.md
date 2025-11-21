@@ -2,13 +2,13 @@
 
 ## Our Pledge
 
-Online communities include people from many different backgrounds. The GoHTML contributors are committed to providing a friendly, safe and welcoming environment for all, regardless of gender identity and expression, sexual orientation, disabilities, neurodiversity, physical appearance, body size, ethnicity, nationality, race, age, religion, or similar personal characteristics.
+Online communities include people from many different backgrounds. The Quick contributors are committed to providing a friendly, safe and welcoming environment for all, regardless of gender identity and expression, sexual orientation, disabilities, neurodiversity, physical appearance, body size, ethnicity, nationality, race, age, religion, or similar personal characteristics.
 
-The first goal of the Code of Conduct is to specify a baseline standard of behavior so that people with different social values and communication styles can talk about GoHTML effectively, productively, and respectfully.
+The first goal of the Code of Conduct is to specify a baseline standard of behavior so that people with different social values and communication styles can talk about Quick effectively, productively, and respectfully.
 
 The second goal is to provide a mechanism for resolving conflicts in the community when they arise.
 
-The third goal of the Code of Conduct is to make our community welcoming to people from different backgrounds. Diversity is critical to the project; for GoHTML to be successful, it needs contributors and users from all backgrounds.
+The third goal of the Code of Conduct is to make our community welcoming to people from different backgrounds. Diversity is critical to the project; for Quick to be successful, it needs contributors and users from all backgrounds.
 
 We believe that healthy debate and disagreement are essential to a healthy project and community. However, it is never ok to be disrespectful. We value diverse opinions, but we value respectful behavior more.
 
